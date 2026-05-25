@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BrewCash - Coffee Shop POS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">☕</div>
+        <div>
+          <h2>BrewCash</h2>
+          <p>Modern Coffee POS</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-btn active" data-page="menuPage">
+          <span>🏠</span> Menu
+        </button>
+        <button class="nav-btn" data-page="ordersPage">
+          <span>🧾</span> Orders
+        </button>
+        <button class="nav-btn" data-page="historyPage">
+          <span>📊</span> History
+        </button>
+        <button class="nav-btn" data-page="settingsPage">
+          <span>⚙️</span> Settings
+        </button>
+      </nav>
+
+      <div class="sidebar-card">
+        <p>Today's Revenue</p>
+        <h3 id="todayRevenue">Rp0</h3>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section id="menuPage" class="page active">
+        <header class="topbar">
+          <div>
+            <h1>Point of Sale</h1>
+            <p>Kelola pesanan coffee shop dengan cepat dan rapi.</p>
+          </div>
+
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari menu..." />
+          </div>
+        </header>
+
+        <section class="stats-grid">
+          <article class="stat-card">
+            <p>Total Menu</p>
+            <h3 id="totalMenu">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Item di Cart</p>
+            <h3 id="cartCount">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Pesanan Selesai</p>
+            <h3 id="orderCount">0</h3>
+          </article>
+        </section>
+
+        <div class="category-tabs" id="categoryTabs"></div>
+
+        <section>
+          <div class="section-title">
+            <h3>Menu Coffee Shop</h3>
+            <p>Pilih item untuk ditambahkan ke pesanan.</p>
+          </div>
+          <div class="menu-grid" id="menuList"></div>
+        </section>
+      </section>
+
+      <section id="ordersPage" class="page">
+        <header class="topbar">
+          <div>
+            <h1>Orders</h1>
+            <p>Daftar pesanan yang sudah diproses hari ini.</p>
+          </div>
+        </header>
+
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Recent Orders</h3>
+            <button class="soft-btn" onclick="clearOrders()">Hapus Semua Order</button>
+          </div>
+          <div id="ordersList" class="order-list"></div>
+        </div>
+      </section>
+
+      <section id="historyPage" class="page">
+        <header class="topbar">
+          <div>
+            <h1>History</h1>
+            <p>Ringkasan transaksi dan pemasukan.</p>
+          </div>
+        </header>
+
+        <section class="stats-grid">
+          <article class="stat-card">
+            <p>Total Transaksi</p>
+            <h3 id="historyOrders">0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Total Revenue</p>
+            <h3 id="historyRevenue">Rp0</h3>
+          </article>
+          <article class="stat-card">
+            <p>Menu Terjual</p>
+            <h3 id="historyItems">0</h3>
+          </article>
+        </section>
+
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Transaction History</h3>
+            <button class="soft-btn" onclick="exportHistory()">Export TXT</button>
+          </div>
+          <div id="historyList" class="history-list"></div>
+        </div>
+      </section>
+
+      <section id="settingsPage" class="page">
+        <header class="topbar">
+          <div>
+            <h1>Settings</h1>
+            <p>Atur identitas toko dan pajak transaksi.</p>
+          </div>
+        </header>
+
+        <form class="settings-card" onsubmit="saveSettings(event)">
+          <label>
+            Nama Toko
+            <input type="text" id="storeName" placeholder="Contoh: BrewCash Coffee" />
+          </label>
+
+          <label>
+            Nama Kasir
+            <input type="text" id="cashierName" placeholder="Contoh: Farrel" />
+          </label>
+
+          <label>
+            Pajak (%)
+            <input type="number" id="taxRate" placeholder="10" min="0" max="30" />
+          </label>
+
+          <label>
+            Mata Uang
+            <select id="currency">
+              <option value="Rp">Rupiah (Rp)</option>
+            </select>
+          </label>
+
+          <button class="primary-btn" type="submit">Simpan Settings</button>
+        </form>
+      </section>
+    </main>
+
+    <aside class="cart-panel">
+      <div class="cart-head">
+        <div>
+          <h2>Current Order</h2>
+          <p id="storeLabel">BrewCash Coffee</p>
+        </div>
+        <button class="icon-btn" onclick="clearCart()">🗑️</button>
+      </div>
+
+      <div id="cartItems" class="cart-items"></div>
+
+      <div class="summary">
+        <div><span>Subtotal</span><b id="subtotal">Rp0</b></div>
+        <div><span>Pajak</span><b id="tax">Rp0</b></div>
+        <div class="total"><span>Total</span><b id="total">Rp0</b></div>
+      </div>
+
+      <label class="payment-label">
+        Uang Bayar
+        <input type="number" id="payment" placeholder="Masukkan nominal" />
+      </label>
+
+      <p class="change">Kembalian: <b id="change">Rp0</b></p>
+
+      <button class="pay-btn" onclick="checkout()">Bayar & Cetak</button>
+    </aside>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-icon" id="modalIcon">✅</div>
+      <h3 id="modalTitle">Berhasil</h3>
+      <p id="modalMessage">Transaksi berhasil diproses.</p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
